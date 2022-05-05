@@ -1,0 +1,112 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+
+struct Point
+{
+    int x;
+    int y;
+};
+
+class Player
+{
+    vector<Building*> b; //用于存放建筑
+    vector<Unit*> u; //存放单位
+    int source[10]; // 各种资源数量
+
+
+    /*可以作为补充的功能 
+   1. int Tech[n] 表示n种科技线（战斗单位升级 生产能力 资源获取..等等方面的吧） 
+    例如科技解锁到一定等级可以生产飞机坦克？
+   2. 不同角色的特色能力 特色单位特色建筑 
+   3. 如果是ai的话可以添加好感度 好感度高时会乐意和玩家交易和合作 好感度低会竞争和开战
+    */
+};
+
+class Unit
+{
+    tile* location;
+    string kind; //种类  
+    Player* master; //主人
+    int needSource[10]; //造一个所需要的各类资源数量
+    int needProduce; //所需生产力 
+    int Hp;
+    int Ad;
+    int range; //攻击范围
+    int moveSpeed; //移动力
+    void attack(Unit* u); //攻击单位
+    void attack(Building* b); //攻击建筑
+    void moveTo(tile* aim); //移动到另一个单元格
+    virtual void ability()=0; //特殊能力    这里平民单位可以有 建立城市 造伐木场  军事单位可以建堡垒 地雷 瞭望塔啥的
+
+    /*  士气 等级 名称 掠夺函数 兵种协同 （例如夹击支援有战斗力加成）
+        视野范围（如果可以搞战争迷雾的话）
+        俘虏平民单位的函数
+        装备（如果可以的话）
+        甚至可以有后勤人员 为单位加血量和士气 后勤线可以被切断
+    */
+};
+
+class Building
+{
+    tile* location;
+    string kind; //种类  可以是军事城 工业城 
+    Player* master; //主人
+    int Hp;
+    int produceForce; //生产力 可以和科技人口和周围建筑挂钩
+    void produceUnit(Unit* u); //生产单位 
+    virtual void ability()=0;
+};
+
+class tile//单元格
+{
+    Point location; //坐标
+    int num; //这个单元格上的数字
+    int source; //资源类型
+    Unit* unit; //格子上的单位
+    Building* build; //格子上的建筑
+    /*可拓展的功能 
+    1.地形种类kind 例如山 河流 平原 盆地 树林 
+    资源不同    
+    穿越不同地形需要的移动力不同   
+    不同兵种在不同地形上会受到各种影响 比如骑兵可以在平原有更高移动力和攻击力 远程单位在山上攻击更远
+    这样的话可以认为制造几个高资源、地形复杂的战略要地 
+    2.随机事件 例如陨石 洪水 干旱 会导致单元格上的建筑和单位受到影响 也可能使单元格资源变化
+    3.可以有野怪... 打了之后有奖励  也可以是宝箱或者是空投
+    4.出海口 可以用几个自己已有资源换取自己没有的资源
+    */
+};
+
+bool win=false;
+bool checkwin();//判断是否胜利
+/*胜利方式可以有很多选择
+    例如可以在地图上设置战略点 占领所有点后胜利
+    可以是将对方城市或首都攻下
+    可以是科技达到一定水平 外星飞船把你接走
+    可以是地图某几种资源被你垄断 
+ */
+
+
+void makeMap(); //生成地图
+void shake(); //掷骰子
+void playerRound();//玩家回合 
+/* 玩家回合先掷骰子获得资源
+然后进行 交易、移动、攻击等等
+*/
+
+
+  
+void AiRound();
+
+
+int main()
+{
+    makeMap(); 
+    while(!win)
+    {
+        playerRound();
+        checkwin();
+        AiRound();
+        checkwin();
+    }
+}
